@@ -52,6 +52,3 @@ class Snowflake:
             return pd.DataFrame(self.cs.execute(query), columns=self.cs.description)
         except snowflake.connector.errors.DatabaseError as e:
             print("EXECUTE ERROR\n", e)
-
-
-
