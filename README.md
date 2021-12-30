@@ -1,1 +1,1 @@
-# FOC
+# Snowflake Connector
