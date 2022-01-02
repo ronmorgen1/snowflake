@@ -19,7 +19,10 @@ class Snowflake:
         if self.is_connected:
             self.disconnect()
 
-    def connect(self):
+    def connect(self) -> None:
+        """
+        Initialize connection to Snowflake API
+        """
         try:
             self.ctx = snowflake.connector.connect(
                 user=self.__user,
@@ -41,14 +44,21 @@ class Snowflake:
             print("CONNECTION ERROR\n", e)
 
     def disconnect(self) -> None:
+        """
+        Disconnect from Snowflake API
+        """
         self.ctx.close()
         self.is_connected = False
 
-    def execute(self, query: str) -> pd.DataFrame:
+    def execute_to_df(self, query: str) -> pd.DataFrame:
+        """
+        Execute SQL query and return result as pandas dataframe
+        """
         if not self.is_connected:
             self.connect()
         self.cs = self.ctx.cursor()
         try:
+            self.cs.execute(query)
             return pd.DataFrame(self.cs.execute(query), columns=self.cs.description)
         except snowflake.connector.errors.DatabaseError as e:
             print("EXECUTE ERROR\n", e)
