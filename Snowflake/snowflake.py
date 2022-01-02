@@ -50,6 +50,31 @@ class Snowflake:
         self.ctx.close()
         self.is_connected = False
 
+    def execute_simple(self, query: str) -> None:
+        """
+        Execute SQL query statement
+        """
+        if not self.is_connected:
+            self.connect()
+        self.cs = self.ctx.cursor()
+        try:
+            return self.cs.execute(query).fetchall()
+        except snowflake.connector.errors.DatabaseError as e:
+            print("EXECUTE ERROR\n", e)
+
+    def execute_file(self, file_path: str) -> None:
+        """
+        Execute SQL query from file
+        """
+        if not self.is_connected:
+            self.connect()
+        self.cs = self.ctx.cursor()
+        try:
+            with open(file_path, 'r') as f:
+                return self.cs.execute(f.read()).fetchall()
+        except snowflake.connector.errors.DatabaseError as e:
+            print("EXECUTE ERROR\n", e)
+
     def execute_to_df(self, query: str) -> pd.DataFrame:
         """
         Execute SQL query and return result as pandas dataframe
